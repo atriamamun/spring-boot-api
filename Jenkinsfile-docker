@@ -3,7 +3,11 @@ pipeline {
 
     environment{
         DOCKER_HUB_LOGIN_USR='atria'
-        DOCKER_HUB_LOGIN_PSW='atria@mamun@#'
+        DOCKER_HUB_LOGIN_PSW='p@hub@doc@#'
+        IMAGE_NAME='atria2010/learn-repro'
+        registry='atria2010/learn-repro'
+        registryCredential=atria2010
+        dockerImage=''
     }
 
     triggers {
@@ -22,7 +26,9 @@ pipeline {
         }
         stage('Build Docker image') {
             steps {
-                bat './gradlew docker'
+                script{
+                    dockerImage=docker.build registry + ":latest"
+                }
             }
         }
         stage('Push Docker image') {
@@ -31,7 +37,15 @@ pipeline {
             }
             steps {
                 bat 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
-                bat './gradlew dockerPush'
+                script{
+                    docker.withRegistry('',registryCredential){
+                        dockerImage.push()
+                    }
+                }
+            }
+
+            script{
+
             }
         }
     }

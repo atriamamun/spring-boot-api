@@ -32,6 +32,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Run Docker image') {
+            steps {
+                bat './gradlew dockerRun'
+            }
+        }
+
         stage('Push Docker image') {
             environment {
                 DOCKER_HUB_LOGIN = credentials('docker-hub')

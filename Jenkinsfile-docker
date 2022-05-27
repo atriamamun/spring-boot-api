@@ -38,11 +38,7 @@ pipeline {
             }
             steps {
                 bat 'docker login -u=atria2010 -p=atria@mamun@#'
-                script{
-                    docker.withRegistry('','atria2010'){
-                        dockerImage.push('latest')
-                    }
-                }
+                bat './gradlew dockerPush'
             }
         }
     }

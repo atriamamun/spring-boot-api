@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment{
+        DOCKER_HUB_LOGIN_USR='atria'
+        DOCKER_HUB_LOGIN_PSW='atria@mamun@#'
+    }
+
     triggers {
         pollSCM '* * * * *'
     }

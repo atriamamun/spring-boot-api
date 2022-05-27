@@ -7,6 +7,7 @@ pipeline {
         IMAGE_NAME='atria2010/learn-repro'
         registry='atria2010/learn-repro'
         registryCredential='atria2010'
+        registryUrl='https://index.docker.io/v1/'
         dockerImage=''
     }
 
@@ -32,16 +33,18 @@ pipeline {
             }
         }
         stage('Push Docker image') {
-            environment {
-                DOCKER_HUB_LOGIN = credentials('docker-hub')
-            }
             steps {
-                bat 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
                 script{
-                    docker.withRegistry('',registryCredential){
+                    docker.withRegistry('https://registry.docker.io',registryCredential){
                         dockerImage.push()
                     }
                 }
+            }
+        }
+
+        stage('Cleaning up'){
+            steps{
+                bat "docker rmi $registry:latest"
             }
         }
     }

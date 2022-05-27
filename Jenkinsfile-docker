@@ -32,21 +32,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Run Docker image') {
-            steps {
-                bat './gradlew dockerRun'
-            }
-        }
-
-        stage('Push Docker image') {
-            environment {
-                DOCKER_HUB_LOGIN = credentials('docker-hub')
-            }
-            steps {
-                bat 'docker login -u=atria2010 -p=atria@mamun@#'
-                bat './gradlew dockerPush'
-            }
-        }
     }
 }

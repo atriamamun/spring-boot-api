@@ -37,9 +37,9 @@ pipeline {
                 DOCKER_HUB_LOGIN = credentials('docker-hub')
             }
             steps {
-                bat 'docker login -u=atria2010 -p=atria@mamun@#'
+                bat 'docker login -u=atria2010 -p=atria@mamun@# -e=mamunbdaiub@gmail.com'
                 script{
-                    docker.withRegistry('https://registry.hub.docker.com','atria2010'){
+                    docker.withRegistry('https://index.docker.io/v1/','atria2010'){
                         dockerImage.push('latest')
                     }
                 }

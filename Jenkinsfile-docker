@@ -39,7 +39,7 @@ pipeline {
             steps {
                 bat 'docker login -u=atria2010 -p=atria@mamun@#'
                 script{
-                    docker.withRegistry('https://registry.hub.docker.com','atria2010'){
+                    docker.withRegistry('','atria2010'){
                         dockerImage.push('latest')
                     }
                 }

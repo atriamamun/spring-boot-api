@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment{
-        DOCKER_HUB_LOGIN_USR='atria'
-        DOCKER_HUB_LOGIN_PSW='p@hub@doc@#'
+        DOCKER_HUB_LOGIN_USR='atria2010'
+        DOCKER_HUB_LOGIN_PSW='atria@mamun@#'
         IMAGE_NAME='atria2010/learn-repro'
         registry='atria2010/learn-repro'
         registryCredential='atria2010'
@@ -33,18 +33,16 @@ pipeline {
             }
         }
         stage('Push Docker image') {
+            environment {
+                DOCKER_HUB_LOGIN = credentials('docker-hub')
+            }
             steps {
+                bat 'docker login -u=atria2010 -p=atria@mamun@#'
                 script{
-                    docker.withRegistry('https://registry.docker.io',registryCredential){
+                    docker.withRegistry('https://registry-1.docker.io/v2/',gcr:atria2010){
                         dockerImage.push()
                     }
                 }
-            }
-        }
-
-        stage('Cleaning up'){
-            steps{
-                bat "docker rmi $registry:latest"
             }
         }
     }

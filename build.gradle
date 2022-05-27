@@ -33,7 +33,7 @@ test {
     useJUnitPlatform()
 }
 
-String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'atria2010'
+String dockerHubUsernameProperty = 'atria2010'
 String imageName = "${dockerHubUsernameProperty}/learn-repro:$version"
 
 docker {

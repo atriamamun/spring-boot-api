@@ -6,7 +6,7 @@ pipeline {
         DOCKER_HUB_LOGIN_PSW='p@hub@doc@#'
         IMAGE_NAME='atria2010/learn-repro'
         registry='atria2010/learn-repro'
-        registryCredential=atria2010
+        registryCredential='atria2010'
         dockerImage=''
     }
 

@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment{
-        DOCKER_HUB_LOGIN_USR='atria2010'
-        DOCKER_HUB_LOGIN_PSW='atria@mamun@#'
+        DockerHubUserName='atria2010'
+        DockerHubPassword='atria@mamun@#'
         IMAGE_NAME='atria2010/learn-repro'
         registry='atria2010/learn-repro'
         registryCredential='atria2010'
@@ -33,6 +33,16 @@ pipeline {
         stage('Run Docker Image') {
             steps {
                 bat 'gradlew dockerRun'
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credential', passwordVariable: 'DockerHubPassword', usernameVariable: 'DockerHubUserName')]) {
+                    bat "docker login -u ${DockerHubUserName} -p ${DockerHubPassword}"
+                    bat 'docker image tag com.tomgregory/spring-boot-api:latest atria2010/learn-repro:latest'
+                    bat 'docker push atria2010/learn-repro:latest'
+                }
             }
         }
     }

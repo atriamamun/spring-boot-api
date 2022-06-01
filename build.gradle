@@ -8,7 +8,9 @@ plugins {
     id 'jp.classmethod.aws.reboot.cloudformation' version '0.45'
 }
 
-version = scmVersion.version
+group = 'com.tomgregory'
+version = '0.0.1'
+sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
@@ -32,40 +34,20 @@ test {
     useJUnitPlatform()
 }
 
-String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'tkgregory'
-String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:$version"
-
+String imageName = "${project.group}/${project.name}"
 docker {
-    name imageName
-    files "build/libs/${bootJar.archiveFileName.get()}"
-    buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
-}
-
-dockerRun {
     dockerfile file('Dockerfile')
-    name project.name
+    name imageName
+    tags 'latest'
+    dependsOn build
+    files bootJar.archiveFile.get()
+    buildArgs(['JAR_FILE': "${bootJar.archiveFileName.get()}"])
+}
+dockerRun {
+    name "${project.name}-container"
     image imageName
-    ports '8085:8080'
-    clean true
-}
-
-aws {
-    region = findProperty('region') ?: 'us-east-1'
-}
-
-cloudFormation {
-    stackName "$project.name-stack"
-    stackParams([
-            SubnetID: findProperty('subnetId') ?: '',
-            ServiceName: project.name,
-            ServiceVersion: project.version,
-            DockerHubUsername: dockerHubUsernameProperty
-    ])
-    templateFile project.file("ecs.yml")
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+    ports '8080:8080'
+    env 'SPRING_PROFILES_ACTIVE': 'dev'
+    daemonize true
+    clean false
 }

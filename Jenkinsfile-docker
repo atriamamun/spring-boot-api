@@ -38,8 +38,8 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'atriamamun', passwordVariable: 'DockerHubPassword', usernameVariable: 'DockerHubUserName')]) {
-                    bat "docker login -u ${DockerHubUserName} -p ${DockerHubPassword}"
+                withCredentials([usernamePassword(credentialsId: 'docker-credential', passwordVariable: 'docker-password', usernameVariable: 'docker-username')]) {
+                    bat "docker login -u ${docker-username} -p ${docker-password}"
                     bat 'docker image tag com.tomgregory/spring-boot-api:latest atria2010/learn-repro:latest'
                     bat 'docker push atria2010/learn-repro:latest'
                 }
